@@ -1,0 +1,63 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import models
+from django.contrib.auth.models import User
+from idna import unicode
+
+
+class Person(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    mobile = models.CharField(max_length=10, blank=True, null=True, unique=True)
+    GENDER_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other')
+    ]
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+
+    class Meta:
+        abstract = True
+
+
+class Owner(Person):
+
+    def __str__(self):
+        # import pdb;pdb.set_trace()
+        return unicode(self.user)
+
+
+class Customer(Person):
+
+    def __str__(self):
+        return unicode(self.user)
+
+
+class Property(models.Model):
+    PROPERTY_TYPE = [
+        ('office', 'Office'),
+        ('home', 'Home'),
+        ('flat', 'Flat'),
+    ]
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    price = models.CharField(max_length=30)
+    size = models.CharField(max_length=30)
+    address = models.CharField(max_length=100)
+    p_type = models.CharField(
+        max_length=8,
+        choices=PROPERTY_TYPE,
+    )
+    city = models.CharField(max_length=30, null=False, blank=False)
+
+    def __str__(self):
+        return unicode(self.owner)  # f-string python 3 string concatanation
+
+
+class Rent(models.Model):
+    property = models.OneToOneField(Property, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, models.SET_NULL, blank=True, null=True)
+    date_on_rent = models.DateField(null=False)
+    tenure = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return unicode(self.customer)
