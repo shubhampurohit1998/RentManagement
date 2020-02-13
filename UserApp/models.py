@@ -16,22 +16,6 @@ class Person(models.Model):
     ]
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
 
-    class Meta:
-        abstract = True
-
-
-class Owner(Person):
-
-    def __str__(self):
-        # import pdb;pdb.set_trace()
-        return unicode(self.user)
-
-
-class Customer(Person):
-
-    def __str__(self):
-        return unicode(self.user)
-
 
 class Property(models.Model):
     PROPERTY_TYPE = [
@@ -39,7 +23,7 @@ class Property(models.Model):
         ('home', 'Home'),
         ('flat', 'Flat'),
     ]
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Person, on_delete=models.CASCADE)
     price = models.CharField(max_length=30)
     size = models.CharField(max_length=30)
     address = models.CharField(max_length=100)
@@ -55,9 +39,14 @@ class Property(models.Model):
 
 class Rent(models.Model):
     property = models.OneToOneField(Property, on_delete=models.CASCADE)
-    customer = models.ForeignKey(Customer, models.SET_NULL, blank=True, null=True)
+    customer = models.ForeignKey(Person, models.SET_NULL, blank=True, null=True)
     date_on_rent = models.DateField(null=False)
     tenure = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return unicode(self.customer)
+
+
+class Picture(models.Model):
+    property = models.ForeignKey(Property, on_delete=models.CASCADE)
+    pic_name = models.ImageField(upload_to='Home/Projects')

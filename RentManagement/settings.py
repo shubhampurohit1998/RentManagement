@@ -137,7 +137,7 @@ AUTHENTICATION_BACKENDS = (
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
+# ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
 ACCOUNT_FORMS = {
                  'login': 'allauth.account.forms.LoginForm',
                  # 'signup': 'allauth.account.forms.SignupForm',
@@ -150,3 +150,5 @@ ACCOUNT_FORMS = {
                   'signup': 'UserApp.forms.RegisterForm',
                   # 'login': 'UserApp.forms.LoginForm',
              }
+LOGIN_REDIRECT_URL = 'home'
+ACCOUNT_EMAIL_VERIFICATION = 'none'

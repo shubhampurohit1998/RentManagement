@@ -10,7 +10,7 @@ class RegisterForm(SignupForm):
     last_name = forms.CharField(max_length=30)
 
     class Meta:
-        model = Owner
+        model = Person
         fields = ['__all__']
 
     mobile = forms.CharField(max_length=10)
@@ -23,11 +23,15 @@ class RegisterForm(SignupForm):
 
     def save(self, request):
         user = super(RegisterForm, self).save(request)
-        user.mobile = self.clened_data['mobile']
-        user.gender = self.cleaned_data['gender']
+
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
         user.save()
+        # user.mobile = self.cleaned_data['mobile']
+        # user.gender = self.cleaned_data['gender']
+        p = Person(mobile=self.cleaned_data['mobile'], gender=self.cleaned_data['gender'], user=user)
+        p.save()
+
         return user
 
 
