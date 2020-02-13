@@ -1,9 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from .models import *
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from .forms import *
 
 
-def index(request, ownr_id):
-    ownr = get_object_or_404(Owner, id=ownr_id)
-    return render(request, 'index.html', {'ownr': ownr})
+def register(request):
+    if request.method == 'POST':
+        obj = request.POST
+        return HttpResponseRedirect('index.html')
+    form = RegisterForm()
+    return render(request, 'signup.html', {'form': form})
 

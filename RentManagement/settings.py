@@ -31,18 +31,19 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
     'UserApp'
 ]
-
+SITE_ID = 1
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,7 +59,7 @@ ROOT_URLCONF = 'RentManagement.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates/UserApp')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -124,3 +125,28 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
+ACCOUNT_FORMS = {
+                 'login': 'allauth.account.forms.LoginForm',
+                 # 'signup': 'allauth.account.forms.SignupForm',
+                 'add_email': 'allauth.account.forms.AddEmailForm',
+                 'change_password': 'allauth.account.forms.ChangePasswordForm',
+                 'set_password': 'allauth.account.forms.SetPasswordForm',
+                 'reset_password': 'allauth.account.forms.ResetPasswordForm',
+                 'reset_password_from_key': 'allauth.account.forms.ResetPasswordKeyForm',
+                 'disconnect': 'allauth.socialaccount.forms.DisconnectForm',
+                  'signup': 'UserApp.forms.RegisterForm',
+                  # 'login': 'UserApp.forms.LoginForm',
+             }
