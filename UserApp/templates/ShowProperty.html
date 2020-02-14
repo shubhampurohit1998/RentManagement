@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<table border="1" style="color:Black">
+    <tr style="color:Blue">
+    <th>Price</th>
+    <th>Address</th>
+    <th>Type</th>
+    <th>Size</th>
+    <th>City</th>
+    </tr>
+    {% for property in property_list %}
+        <tr>
+            <td>{{property.price}}</td>
+            <td>{{property.address}}</td>
+            <td>{{property.p_type}}</td>
+            <td>{{property.size}}</td>
+            <td>{{property.city}}</td>
+          </tr>
+    {% endfor %}
+</table>
+{% endblock %}

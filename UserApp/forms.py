@@ -1,6 +1,6 @@
 from django import forms
 from . models import *
-from django.forms import ModelForm
+from django.forms import ModelForm, Textarea
 from allauth.account.forms import SignupForm
 from allauth.account.forms import LoginForm
 
@@ -35,3 +35,28 @@ class RegisterForm(SignupForm):
         return user
 
 
+class PropertyRegisterForm(ModelForm):
+
+    class Meta:
+        model = Property
+        # fields = ['price', 'size', 'address', 'p_type', 'city']
+        fields = '__all__'
+        widgets = {'owner': forms.HiddenInput(), 'address': Textarea(attrs={'cols': 40, 'rows': 3})}
+        labels = {
+            'p_type': 'Property type',
+            # 'owner': forms.HiddenInput()
+        }
+        help_texts = {
+            'Property type': 'Select which kind of property you wanna add here.....',
+        }
+
+
+class InsertImageForm(ModelForm):
+
+    class Meta:
+        model = Picture
+        fields = '__all__'
+        widgets = {'property': forms.HiddenInput()}
+        labels = {
+            'property': forms.HiddenInput()
+        }

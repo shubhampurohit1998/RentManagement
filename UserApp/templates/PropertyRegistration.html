@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="post" action="">
+    {% csrf_token %}
+    <center>
+        {{current_user.id}}
+        <h3 style="color:red">Property Details</h3>
+        {% for field in form %}
+           <p style="color:blue">{{field.label}} : {{field}}<br><br></p>
+        {% endfor %}
+        <input type="submit" value = 'Submit'>
+    </center>
+</form>
+{% endblock %}

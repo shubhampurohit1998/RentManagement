@@ -73,7 +73,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'RentManagement.wsgi.application'
-
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -134,10 +135,7 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_USERNAME_REQUIRED = False
-# ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
+
 ACCOUNT_FORMS = {
                  'login': 'allauth.account.forms.LoginForm',
                  # 'signup': 'allauth.account.forms.SignupForm',
@@ -150,5 +148,8 @@ ACCOUNT_FORMS = {
                   'signup': 'UserApp.forms.RegisterForm',
                   # 'login': 'UserApp.forms.LoginForm',
              }
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_USERNAME_REQUIRED = False
 LOGIN_REDIRECT_URL = 'home'
 ACCOUNT_EMAIL_VERIFICATION = 'none'

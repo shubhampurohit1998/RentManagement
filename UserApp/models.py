@@ -34,7 +34,7 @@ class Property(models.Model):
     city = models.CharField(max_length=30, null=False, blank=False)
 
     def __str__(self):
-        return unicode(self.owner)  # f-string python 3 string concatanation
+        return unicode(self.p_type)  # f-string python 3 string concatanation
 
 
 class Rent(models.Model):
@@ -49,4 +49,4 @@ class Rent(models.Model):
 
 class Picture(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
-    pic_name = models.ImageField(upload_to='Home/Projects')
+    pic_name = models.ImageField(upload_to='images/')
