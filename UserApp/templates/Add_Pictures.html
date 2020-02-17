@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<form method="post" action="">
-    <input type="image" name="img">
-    <input type="submit" value="Add image">
+{% for pic in images%}
+<img src="{{media_url}}{{pic.image}}" />
+{% endfor %}
+<form method="post" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
 </form>
 {% endblock %}

@@ -5,9 +5,10 @@
     <center>
         {{current_user.id}}
         <h3 style="color:red">Property Details</h3>
-        {% for field in form %}
-           <p style="color:blue">{{field.label}} : {{field}}<br><br></p>
-        {% endfor %}
+<!--        {% for field in form %}-->
+<!--           <p style="color:blue">{{field.label}} : {{field}}<br><br></p>-->
+<!--        {% endfor %}-->
+        {{ form.as_p }}
         <input type="submit" value = 'Submit'>
     </center>
 </form>

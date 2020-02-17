@@ -56,7 +56,7 @@ class InsertImageForm(ModelForm):
     class Meta:
         model = Picture
         fields = '__all__'
-        widgets = {'property': forms.HiddenInput()}
+        widgets = {'property': forms.HiddenInput(), 'pic_name': forms.FileInput()}
         labels = {
-            'property': forms.HiddenInput()
+            'pic_name': 'Select image'
         }

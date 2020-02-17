@@ -1,9 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
+<form method="GET" action="{% url 'home' %}">
+    <input type="search" placeholder="search here" name="search">
+    <input type="submit" value="Search">
+</form>
 <p>Welcome to dashboard</p>
 <ul>
 <li><a href="{% url 'register_property' %}">Add your property now</a><br></li>
 <li><a href="{% url 'show_property' %}">Your assets</a><br></li>
+<li><a href="#">Property on rent</a><br></li>
 </ul>
+<table>
+{%for item in property_list%}
+    <tr>
+        <td>{{item.city}}</td>
+        <td>{{item.price}}</td>
+        <td>{{item.address}}</td>
+        <td>{{item.size}}</td>
+        <td>{{item.p_type}}</td>
+        <td><a href="{% url 'view_details' item.id %}">View details</a></td>
+    </tr>
+{% endfor %}
+</table>
 {% endblock %}
 
