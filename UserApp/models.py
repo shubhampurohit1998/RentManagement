@@ -9,6 +9,7 @@ from idna import unicode
 class Person(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     mobile = models.CharField(max_length=10, blank=True, null=True, unique=True)
+    # profile_picture = models.ImageField(upload_to='images/', blank=True, null=True, verbose_name='Profile picture')
     GENDER_CHOICES = [
         ('M', 'Male'),
         ('F', 'Female'),

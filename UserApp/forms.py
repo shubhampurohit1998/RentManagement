@@ -2,7 +2,6 @@ from django import forms
 from . models import *
 from django.forms import ModelForm, Textarea
 from allauth.account.forms import SignupForm
-from allauth.account.forms import LoginForm
 
 
 class RegisterForm(SignupForm):
@@ -60,3 +59,27 @@ class InsertImageForm(ModelForm):
         labels = {
             'pic_name': 'Select image'
         }
+
+
+class RentForm(ModelForm):
+
+    class Meta:
+        model = Rent
+        fields = "__all__"
+        widgets = {'property': forms.HiddenInput(),
+                   'customer': forms.HiddenInput,
+                   'date_on_rent': forms.DateInput,
+                   'tenure': forms.DateInput,
+                   }
+
+
+class SearchForm(forms.Form):
+    query = forms.CharField(max_length=50, label='',   widget=forms.TextInput
+                            (attrs={'placeholder': 'search here', }), required=False)
+    # widgets = {
+    #     'query': forms.Form
+    # }
+
+
+class UpdateProfileForm(ModelForm):
+    pass

@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 {% for pic in images%}
-<img src="{{media_url}}{{pic.image}}" />
 {% endfor %}
 <form method="post" action="" enctype="multipart/form-data">
     {% csrf_token %}
