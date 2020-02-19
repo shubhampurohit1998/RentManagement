@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+<!--{% static "images" as baseUrl %}-->
 {% block content %}
-{% for pic in images%}
-{% endfor %}
+{% for image in images %}
+<img src="{{ image.pic_name.url }}" alt="" width="225px" height="225px">
+{% endfor%}
 <form method="post" action="" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}

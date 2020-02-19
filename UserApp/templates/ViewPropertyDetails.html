@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
-    {{user.first_name}}
-    {{user.last_name}}
-    {{owner.mobile}}
-    {{property.price}}
-    {{property.address}}
-    {{property.p_type}}
-    {{property.size}}
-    {{property.city}}
+    <label>Owner  :</label>{{user.first_name}}{{user.last_name}}<br>
+    <label>Contact Number  :</label>{{owner.mobile}}<br>
+    <label>Contact Email  :</label>{{user.email}}<br>
+    <label>Price  :</label>{{property.price}}<br>
+    <label>Property Address  :</label>{{property.address}}<br>
+    <label>Asset type  :</label>{{property.p_type}}<br>
+    <label>Description  :</label>{{property.description}}<br>
+    <label>Area/Size  :</label>{{property.size}}<br>
+    <label>Asset city  :</label>{{property.city}}<br>
+    {% for image in images%}
+        <img src="{{image.pic_name.url}}" alt="" height="225" width="225">
+    {% endfor %}
     <a href="{% url 'time_period' property.id %}"> Buy/Rent this property</a>
 {% endblock %}

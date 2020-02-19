@@ -57,6 +57,7 @@ def add_property_images(request, property_id):
         return HttpResponseRedirect(reverse('add_image', args=[property_id]))
 
     images = Picture.objects.filter(property_id=property_id)
+    # import pdb;pdb.set_trace()
     form = InsertImageForm(initial={'property': property_id})
     return render(request, 'Add_Pictures.html', {'form': form, 'images': images})
 
@@ -84,7 +85,11 @@ def property_detail(request, property_id):
     property_obj = get_object_or_404(Property, pk=property_id)
     owner_obj = get_object_or_404(Person, pk=property_obj.owner_id)
     user_obj = get_object_or_404(User, pk=owner_obj.user_id)
-    context = {'property': property_obj, 'owner': owner_obj, 'user': user_obj}
+    picture_obj = Picture.objects.filter(property_id=property_id)
+    context = {'property': property_obj,
+               'owner': owner_obj,
+               'user': user_obj,
+               "images": picture_obj}
     return render(request, 'ViewPropertyDetails.html', context)
 
 
@@ -113,8 +118,8 @@ def property_on_rent(request, property_id):
     # property_obj = Property.objects.get(id=property_id)
     if request.method == 'POST':
         form = RentForm(request.POST)
-        import pdb;
-        pdb.set_trace()
+        # import pdb;
+        # pdb.set_trace()
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('show_property'))

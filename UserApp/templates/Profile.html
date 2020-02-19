@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    {{user.first_name}}<br>
-    {{user.last_name}}<br>
-    {{user.email}}<br>
-    {{person.mobile}}<br>
-    {{person.get_gender_display}}<br>
+    <img src="image.profile_picture.url" alt="" width="225" height="225"><br>
+    <label>Username  : </label>{{user.first_name}}{{user.last_name}}<br>
+    <label>Email  : </label>{{user.email}}<br>
+    <label>Contact number  : </label>{{person.mobile}}<br>
+    <label>Gender  : </label>{{person.get_gender_display}}<br>
     <a href="{% url 'update_profile' %}">Update profile</a>
 {% endblock %}

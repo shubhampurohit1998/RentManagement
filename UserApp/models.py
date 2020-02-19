@@ -9,7 +9,7 @@ from idna import unicode
 class Person(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     mobile = models.CharField(max_length=10, blank=True, null=True, unique=True)
-    # profile_picture = models.ImageField(upload_to='images/', blank=True, null=True, verbose_name='Profile picture')
+    profile_picture = models.ImageField(upload_to='images/', blank=True, null=True, verbose_name='Profile picture')
     GENDER_CHOICES = [
         ('M', 'Male'),
         ('F', 'Female'),
@@ -25,15 +25,15 @@ class Property(models.Model):
         ('flat', 'Flat'),
     ]
     owner = models.ForeignKey(Person, on_delete=models.CASCADE)
-    price = models.CharField(max_length=30, verbose_name='Price')
-    size = models.CharField(max_length=30, verbose_name='Size')
-    address = models.CharField(max_length=100, verbose_name='Address')
+    price = models.CharField(max_length=30,)
+    size = models.CharField(max_length=30,)
+    address = models.CharField(max_length=100,)
     p_type = models.CharField(
         max_length=8,
         choices=PROPERTY_TYPE,
     )
-    city = models.CharField(max_length=30, null=False, blank=False, verbose_name='City')
-    description = models.TextField(max_length=150, blank=True, null=True, verbose_name='Description')
+    city = models.CharField(max_length=30, null=False, blank=False,)
+    description = models.TextField(max_length=150, blank=True, null=True,)
 
     def __str__(self):
         return unicode(self.p_type)  # f-string python 3 string concatanation
@@ -42,8 +42,8 @@ class Property(models.Model):
 class Rent(models.Model):
     property = models.OneToOneField(Property, on_delete=models.CASCADE)
     customer = models.ForeignKey(Person, models.SET_NULL, blank=True, null=True)
-    date_on_rent = models.DateField(null=False, verbose_name='Rent start date')
-    tenure = models.DateField(blank=True, null=True, verbose_name='Tenure of rent')
+    date_on_rent = models.DateField(null=False,)
+    tenure = models.DateField(blank=True, null=True,)
 
     def __str__(self):
         return unicode(self.customer)
@@ -51,4 +51,4 @@ class Rent(models.Model):
 
 class Picture(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
-    pic_name = models.ImageField(upload_to='images/', verbose_name='Picture')
+    pic_name = models.ImageField(upload_to='images/')
