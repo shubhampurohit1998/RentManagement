@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
 from django.db import models
 from django.contrib.auth.models import User
 from idna import unicode
@@ -9,13 +8,17 @@ from idna import unicode
 class Person(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     mobile = models.CharField(max_length=10, blank=True, null=True, unique=True)
-    profile_picture = models.ImageField(upload_to='images/', blank=True, null=True, verbose_name='Profile picture')
+    profile_picture = models.ImageField(upload_to='profile_pictures/',
+                                        blank=True, null=True, verbose_name='Profile picture')
     GENDER_CHOICES = [
         ('M', 'Male'),
         ('F', 'Female'),
         ('O', 'Other')
     ]
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+
+    def __str__(self):
+        return self.user.first_name
 
 
 class Property(models.Model):
@@ -34,9 +37,13 @@ class Property(models.Model):
     )
     city = models.CharField(max_length=30, null=False, blank=False,)
     description = models.TextField(max_length=150, blank=True, null=True,)
+    is_active = models.BooleanField(default=True, )
+
+    class Meta:
+        get_latest_by = id
 
     def __str__(self):
-        return unicode(self.p_type)  # f-string python 3 string concatanation
+        return unicode(self.city)  # f-string python 3 string concatenation
 
 
 class Rent(models.Model):
@@ -46,7 +53,7 @@ class Rent(models.Model):
     tenure = models.DateField(blank=True, null=True,)
 
     def __str__(self):
-        return unicode(self.customer)
+        return unicode(self.property)
 
 
 class Picture(models.Model):

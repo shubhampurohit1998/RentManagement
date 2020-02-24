@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<p>Hello users</p>
+    {% for list in user_list %}
+    {{list.first_name}}
+    {{list.last_name}}
+    {% endfor %}
+    {% for list in person_list %}
+    {{list.first_name}}
+    {{list.last_name}}
+    {% endfor %}
+{% endblock %}

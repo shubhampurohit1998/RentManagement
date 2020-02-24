@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-    <label>Owner  :</label>{{user.first_name}}{{user.last_name}}<br>
+    {% if owner.profile_picture%}
+    <img src="{{owner.profile_picture.url}}" alt="">
+    {% endif%}<br>
+    <label>Owner  :</label>{{user.first_name}} {{user.last_name}}<br>
     <label>Contact Number  :</label>{{owner.mobile}}<br>
     <label>Contact Email  :</label>{{user.email}}<br>
     <label>Price  :</label>{{property.price}}<br>
@@ -9,7 +13,7 @@
     <label>Description  :</label>{{property.description}}<br>
     <label>Area/Size  :</label>{{property.size}}<br>
     <label>Asset city  :</label>{{property.city}}<br>
-    {% for image in images%}
+    {% for image in images %}
         <img src="{{image.pic_name.url}}" alt="" height="225" width="225">
     {% endfor %}
     <a href="{% url 'time_period' property.id %}"> Buy/Rent this property</a>

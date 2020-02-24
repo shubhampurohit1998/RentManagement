@@ -26,11 +26,9 @@ class RegisterForm(SignupForm):
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
         user.save()
-        # user.mobile = self.cleaned_data['mobile']
-        # user.gender = self.cleaned_data['gender']
-        p = Person(mobile=self.cleaned_data['mobile'], gender=self.cleaned_data['gender'], user=user)
+        p = Person(mobile=self.cleaned_data['mobile'], gender=self.cleaned_data['gender'],
+                   user=user)
         p.save()
-
         return user
 
 
@@ -40,7 +38,11 @@ class PropertyRegisterForm(ModelForm):
         model = Property
         # fields = ['price', 'size', 'address', 'p_type', 'city']
         fields = '__all__'
-        widgets = {'owner': forms.HiddenInput(), 'address': Textarea(attrs={'cols': 40, 'rows': 3})}
+        widgets = {'owner': forms.HiddenInput(),
+                   'is_active': forms.HiddenInput(),
+                   'address': Textarea(attrs={'cols': 40, 'rows': 2}),
+                   'description': Textarea(attrs={'cols': 40, 'rows': 2}),
+                   }
         labels = {
             'p_type': 'Property type',
             # 'owner': forms.HiddenInput()
@@ -67,10 +69,14 @@ class RentForm(ModelForm):
         model = Rent
         fields = "__all__"
         widgets = {'property': forms.HiddenInput(),
-                   'customer': forms.HiddenInput,
+                   'customer': forms.HiddenInput(),
                    'date_on_rent': forms.DateInput,
                    'tenure': forms.DateInput,
                    }
+
+    # def __init__(self, *args, **kwargs):
+    #     super(RentForm, self).__init__(*args, **kwargs)
+    #     self.fields['date_on_rent'].disabled = True
 
 
 class SearchForm(forms.Form):
@@ -81,5 +87,47 @@ class SearchForm(forms.Form):
     # }
 
 
-class UpdateProfileForm(ModelForm):
-    pass
+class UpdateProfilePersonForm(ModelForm):
+
+    class Meta:
+        model = Person
+        fields = '__all__'
+
+        widgets = {
+            'user': forms.HiddenInput()
+        }
+
+
+class UpdateProfileUserForm(ModelForm):
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+
+
+# class DemoPersonForm(ModelForm):
+#
+#     class Meta:
+#         model = Person
+#         fields = '__all__'
+#
+#     widgets = {
+#         'user': forms.HiddenInput()
+#     }
+#
+#
+# class DemoUserForm(ModelForm):
+#
+#     class Meta:
+#         model = User
+#         fields = ['first_name', 'last_name']
+
+class ProfilePictureForm(ModelForm):
+    class Meta:
+        model = Person
+        # fields = ['profile_picture']
+        fields = '__all__'
+
+
+class LeaveMessageForm(forms.Form):
+    message = forms.T

@@ -3,11 +3,12 @@
 <!--{% static "images" as baseUrl %}-->
 {% block content %}
 {% for image in images %}
-<img src="{{ image.pic_name.url }}" alt="" width="225px" height="225px">
+    <img src="{{ image.pic_name.url }}" alt="" width="225px" height="225px">
+    <a href="{% url 'delete_image' image.id%}">Delete</a>
 {% endfor%}
-<form method="post" action="" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit">
-</form>
+    <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
+    </form>
 {% endblock %}

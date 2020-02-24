@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if person.profile_picture %}
+  <img src="{{person.profile_picture.url}}"><br>
+{% endif %}
+<table border="1">
+<tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Mobile</th>
+    <th>Type</th>
+    <th>Size</th>
+    <th>City</th>
+    <th>Date on rent</th>
+    <th colspan="1">Tenure</th>
+</tr>
+    <tr>
+        <td>{{user.first_name}} {{user.last_name}} </td>
+        <td>{{user.email}}</td>
+        <td>{{person.mobile}}</td>
+        <td>{{property.p_type}}</td>
+        <td>{{property.size}}</td>
+        <td>{{property.city}}</td>
+        <td>{{rent.date_on_rent}}</td>
+        <td>{{rent.tenure}}</td>
+        <td><a href="#"></a>Message</td>
+    </tr>
+</table>
+{% endblock%}

@@ -9,9 +9,24 @@
 <li><a href="{% url 'profile' %}">Profile</a></li>
 <li><a href="{% url 'register_property' %}">Add your property now</a><br></li>
 <li><a href="{% url 'show_property' %}">Your assets</a><br></li>
-<li><a href="#">Property on rent</a><br></li>
+<li><a href="{% url 'random_properties'%}">Property on rent</a><br></li>
+<li><a href="{% url 'rental_assets' %}">Rental properties</a><br></li>
+<li><a href="#">Notifications</a><br></li>
+<a href="{% url 'user_list' %}"></a><br>
+<a href="{% url 'user_detail' %}"></a><br>
 </ul>
-<table>
+{% if flag and property_list %}
+<center>
+<table border="1">
+    <tr>
+        <th>City</th>
+        <th>Price</th>
+        <th>Address</th>
+        <th>Size</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>More details</th>
+    </tr>
 {%for item in property_list%}
     <tr>
         <td>{{item.city}}</td>
@@ -24,5 +39,7 @@
     </tr>
 {% endfor %}
 </table>
+</center>
+{% endif %}
 {% endblock %}
 

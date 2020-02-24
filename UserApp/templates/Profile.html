@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <img src="image.profile_picture.url" alt="" width="225" height="225"><br>
-    <label>Username  : </label>{{user.first_name}}{{user.last_name}}<br>
+    {% if person.profile_picture %}
+    <img src="{{ person.profile_picture.url }}" alt="" width="225" height="225"><br>
+    {% else %}
+    <a href="{%url 'add_profile_picture' person.id%}">Add profile picture</a>
+    {% endif %}
+    <label>Username  : </label>{{user.first_name}}  {{user.last_name}}<br>
     <label>Email  : </label>{{user.email}}<br>
     <label>Contact number  : </label>{{person.mobile}}<br>
     <label>Gender  : </label>{{person.get_gender_display}}<br>

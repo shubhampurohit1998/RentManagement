@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
-    <form>
-    {{form.as_p}}
+<ul>
+    <li><a href="{% url 'home' %}">Home</a></li>
+</ul>
+    <form method="post" action="">
+        {% csrf_token %}
+        {{user.as_p}}
+        {{person.as_p}}
     <input type="submit" value="Update">
     </form>
 {% endblock %}

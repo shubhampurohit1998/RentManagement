@@ -8,6 +8,7 @@
         <th>Size</th>
         <th>City</th>
         <th>Description</th>
+        <th>Status</th>
         <th colspan="3">Actions</th>
         </tr>
     {% for property in property_list %}
@@ -18,6 +19,11 @@
             <td>{{property.size}}</td>
             <td>{{property.city}}</td>
             <td>{{property.description}}</td>
+            {% if property.is_active%}
+            <td>None</td>
+            {% else %}
+            <td><a href="{% url 'renter_details' property.id %}">On rent</a></td>
+            {% endif %}
             <td><a href="{% url 'add_image' property.id %}">Add image</a></td>
             <td><a href="{% url 'update_property' property.id %}">Update</a></td>
             <td><a href="{% url 'delete_property' property.id %}">Delete</a></td>
