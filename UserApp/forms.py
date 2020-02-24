@@ -129,5 +129,5 @@ class ProfilePictureForm(ModelForm):
         fields = '__all__'
 
 
-class LeaveMessageForm(forms.Form):
-    message = forms.T
+# class LeaveMessageForm(forms.Form):
+#     message = forms.T
