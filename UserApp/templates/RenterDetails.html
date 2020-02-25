@@ -13,17 +13,18 @@
     <th>City</th>
     <th>Date on rent</th>
     <th colspan="1">Tenure</th>
+    <th>Actions</th>
 </tr>
     <tr>
         <td>{{user.first_name}} {{user.last_name}} </td>
         <td>{{user.email}}</td>
-        <td>{{person.mobile}}</td>
+        <td>{{user.mobile}}</td>
         <td>{{property.p_type}}</td>
         <td>{{property.size}}</td>
         <td>{{property.city}}</td>
         <td>{{rent.date_on_rent}}</td>
         <td>{{rent.tenure}}</td>
-        <td><a href="#"></a>Message</td>
+        <td><a href="#">Message</a></td>
     </tr>
 </table>
 {% endblock%}

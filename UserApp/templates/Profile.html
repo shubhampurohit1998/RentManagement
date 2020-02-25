@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    {% if person.profile_picture %}
-    <img src="{{ person.profile_picture.url }}" alt="" width="225" height="225"><br>
+    {% if user.profile_picture %}
+    <img src="{{ user.profile_picture.url }}" alt="" width="225" height="225"><br>
     {% else %}
-    <a href="{%url 'add_profile_picture' person.id%}">Add profile picture</a>
+    <a href="{%url 'add_profile_picture' user.id%}">Add profile picture</a><br>
     {% endif %}
     <label>Username  : </label>{{user.first_name}}  {{user.last_name}}<br>
     <label>Email  : </label>{{user.email}}<br>
-    <label>Contact number  : </label>{{person.mobile}}<br>
-    <label>Gender  : </label>{{person.get_gender_display}}<br>
+    <label>Contact number  : </label>{{user.mobile}}<br>
+    <label>Gender  : </label>{{user.get_gender_display}}<br>
     <a href="{% url 'update_profile' %}">Update profile</a>
 {% endblock %}

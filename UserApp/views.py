@@ -35,12 +35,12 @@ def add_property(request):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('home'))
-    form = PropertyRegisterForm(initial={'owner': request.user.person.id, 'is_active':  True})
+    form = PropertyRegisterForm(initial={'owner': request.user.id, 'is_active':  True})
     return render(request, 'PropertyRegistration.html', {'form': form})
 
 
 def show_property_list(request):
-    property_list = Property.objects.filter(owner_id=request.user.person.id)
+    property_list = Property.objects.filter(owner_id=request.user.id)
     context = {'property_list': property_list}
     return render(request, 'ShowProperty.html', context)
 
@@ -99,11 +99,9 @@ def update_property_details(request, property_id):
 
 def property_detail(request, property_id):
     property_obj = get_object_or_404(Property, pk=property_id)
-    owner_obj = get_object_or_404(Person, pk=property_obj.owner_id)
-    user_obj = get_object_or_404(User, pk=owner_obj.user_id)
+    user_obj = get_object_or_404(User, pk=property_obj.owner.id)
     picture_obj = Picture.objects.filter(property_id=property_id)
     context = {'property': property_obj,
-               'owner': owner_obj,
                'user': user_obj,
                "images": picture_obj}
     return render(request, 'ViewPropertyDetails.html', context)
@@ -125,23 +123,19 @@ class ProfileView(View):
 
     def get(self, request):
         user_obj = get_object_or_404(User, pk=request.user.id)
-        person_obj = get_object_or_404(Person, user_id=request.user.id)
         # owned_properties = Property.objects.all(owner_id=person_obj.id).count()
-        context = {'user': user_obj, 'person': person_obj}
+        context = {'user': user_obj}
         return render(request, self.template_name, context)
 
 
 def update_user_profile(request):
     user = get_object_or_404(User, pk=request.user.id)
-    person = get_object_or_404(Person, user_id=user.id)
-    person_form = UpdateProfilePersonForm(request.POST or None, instance=person)
     user_form = UpdateProfileUserForm(request.POST or None, instance=user)
     if request.method == 'POST':
-        if user_form.is_valid() and person_form.is_valid():
+        if user_form.is_valid():
             user_form.save()
-            person_form.save()
             return HttpResponseRedirect(reverse('profile'))
-    context = {'user': user_form, 'person': person_form}
+    context = {'user': user_form}
     return render(request, 'UpdateProfile.html', context)
 
 
@@ -155,15 +149,15 @@ def property_on_rent(request, property_id):
             Property.objects.filter(id=property_id).update(is_active=False)
             form.save()
             return HttpResponseRedirect(reverse('rental_assets'))
-    form = RentForm(initial={'property': property_id, 'customer': request.user.person.id,
+    form = RentForm(initial={'property': property_id, 'customer': request.user.id,
                              'date_on_rent': date.today})
     context = {'form': form}
     return render(request, 'AddOnRentPeriod.html', context)
 
 
 def rental_property_list(request):
-    person = Person.objects.get(user_id=request.user.id)
-    rental_properties = Rent.objects.filter(customer_id=person.id)
+    user = User.objects.get(id=request.user.id)
+    rental_properties = Rent.objects.filter(customer_id=user.id)
     context = {'rent': rental_properties}
     return render(request, 'OnRentProperty.html', context)
 
@@ -179,9 +173,8 @@ def renter_details(request, property_id):
     # pdb.set_trace()
     property_obj = Property.objects.get(id=property_id)
     rent_obj = Rent.objects.get(property_id=property_id)
-    person_obj = get_object_or_404(Person, id=rent_obj.customer.id)
-    user_obj = get_object_or_404(User, id=person_obj.user_id)
-    context = {'person': person_obj, 'user': user_obj, 'rent': rent_obj, 'property': property_obj}
+    user_obj = get_object_or_404(User, id=rent_obj.customer.id)
+    context = {'user': user_obj, 'rent': rent_obj, 'property': property_obj}
     return render(request, 'RenterDetails.html', context)
 
 
@@ -196,7 +189,7 @@ def search_random_properties(request):
 
 
 def add_profile_picture(request, person_id):
-    instance = get_object_or_404(Person, id=person_id)
+    # instance = get_object_or_404(Person, id=person_id)
     form = ProfilePictureForm(request.POST or None, instance=instance)
     if request.method == 'POST':
         if form.is_valid():
@@ -206,25 +199,40 @@ def add_profile_picture(request, person_id):
     return render(request, 'AddProfilePicture.html', {'form': form, 'person_id': person_id})
 
 
-def leave_request(request, renter_id):
+def leave_request(request, property_id):
+    if request.method == 'POST':
+        form = LeaveMessageForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('rental_assets'))
+    # import pdb;
+    # pdb.set_trace()
+    property_obj = Property.objects.get(id=property_id)
+    form = LeaveMessageForm(initial={'rent': property_obj.rent.id,
+                                     'user': property_obj.owner.id,
+                                     'property': property_obj.id})
+    return render(request, 'LeaveMessage.html', {'form': form, 'property_id': property_id})
+
+
+def leave_request_panel(request):
+    leave_obj = LeaveRequest.objects.filter(user_id=request.user.id)
+    context = {'leave_request': leave_obj}
+    return render(request, 'LeaveRequestPanel.html', context)
+
+
+def leave_request_accept(request, request_id):
+    leave_status = LeaveRequest.objects.get(id=request_id)
+    leave_status.request_accept = True
+    leave_status.save()
+    return HttpResponseRedirect(reverse('owner_leave_panel'))
+
+
+def leave_request_cancel(request, request_id):
+    leave_status = LeaveRequest.objects.get(id=request_id)
+    leave_status.request_accept = False
+    leave_status.save()
+    return HttpResponseRedirect(reverse('owner_leave_panel'))
+
+
+def contact_list(request):
     pass
-
-
-def request_panel(request):
-    pass
-
-
-class UserList(ListView):
-    model = User
-    template_name = 'UserList.html'
-    context_object_name = 'user_list'
-
-
-class UserDetail(DetailView):
-    model = User
-    template_name = 'UserDetail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['person_list'] = Person.objects.all()
-        return context

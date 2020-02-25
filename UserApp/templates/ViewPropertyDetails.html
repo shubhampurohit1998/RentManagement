@@ -2,10 +2,10 @@
 {% load static %}
 {% block content %}
     {% if owner.profile_picture%}
-    <img src="{{owner.profile_picture.url}}" alt="">
+    <img src="{{user.profile_picture.url}}" alt="">
     {% endif%}<br>
     <label>Owner  :</label>{{user.first_name}} {{user.last_name}}<br>
-    <label>Contact Number  :</label>{{owner.mobile}}<br>
+    <label>Contact Number  :</label>{{user.mobile}}<br>
     <label>Contact Email  :</label>{{user.email}}<br>
     <label>Price  :</label>{{property.price}}<br>
     <label>Property Address  :</label>{{property.address}}<br>

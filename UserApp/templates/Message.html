@@ -23,7 +23,6 @@
             </td>
             {% endif %}
          <td><a href="{% url 'renter_details' item.rent.property.id%}">Details</a></td>
-         <td><a href="{% url 'reply' item.rent.customer.id%}">Reply</a></td>
         </tr>
     {% endfor %}
     </table>

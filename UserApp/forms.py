@@ -7,11 +7,6 @@ from allauth.account.forms import SignupForm
 class RegisterForm(SignupForm):
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)
-
-    class Meta:
-        model = Person
-        fields = ['__all__']
-
     mobile = forms.CharField(max_length=10)
     GENDER_CHOICES = [
         ('M', 'Male'),
@@ -25,10 +20,9 @@ class RegisterForm(SignupForm):
 
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+        user.mobile = self.cleaned_data['mobile']
+        user.gender = self.cleaned_data['gender']
         user.save()
-        p = Person(mobile=self.cleaned_data['mobile'], gender=self.cleaned_data['gender'],
-                   user=user)
-        p.save()
         return user
 
 
@@ -87,22 +81,11 @@ class SearchForm(forms.Form):
     # }
 
 
-class UpdateProfilePersonForm(ModelForm):
-
-    class Meta:
-        model = Person
-        fields = '__all__'
-
-        widgets = {
-            'user': forms.HiddenInput()
-        }
-
-
 class UpdateProfileUserForm(ModelForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name']
+        fields = ['first_name', 'last_name', 'mobile', 'gender', 'profile_picture', ]
 
 
 # class DemoPersonForm(ModelForm):
@@ -124,10 +107,19 @@ class UpdateProfileUserForm(ModelForm):
 
 class ProfilePictureForm(ModelForm):
     class Meta:
-        model = Person
+        model = User
         # fields = ['profile_picture']
         fields = '__all__'
 
 
-# class LeaveMessageForm(forms.Form):
-#     message = forms.T
+class LeaveMessageForm(ModelForm):
+
+    class Meta:
+        model = LeaveRequest
+        fields = '__all__'
+        widgets = {
+            'from_user': forms.HiddenInput(),
+            'to_user': forms.HiddenInput(),
+            'request_accept': forms.HiddenInput(),
+            'property': forms.HiddenInput()
+        }
