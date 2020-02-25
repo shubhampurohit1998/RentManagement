@@ -64,6 +64,7 @@ class RentForm(ModelForm):
         fields = "__all__"
         widgets = {'property': forms.HiddenInput(),
                    'customer': forms.HiddenInput(),
+                   'request_accept': forms.HiddenInput(),
                    'date_on_rent': forms.DateInput,
                    'tenure': forms.DateInput,
                    }
@@ -112,14 +113,12 @@ class ProfilePictureForm(ModelForm):
         fields = '__all__'
 
 
-class LeaveMessageForm(ModelForm):
+class MessageForm(ModelForm):
 
     class Meta:
-        model = LeaveRequest
+        model = Message
         fields = '__all__'
         widgets = {
-            'from_user': forms.HiddenInput(),
-            'to_user': forms.HiddenInput(),
-            'request_accept': forms.HiddenInput(),
-            'property': forms.HiddenInput()
+            'rent': forms.HiddenInput(),
+            'user': forms.HiddenInput(),
         }

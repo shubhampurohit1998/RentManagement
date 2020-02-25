@@ -24,7 +24,7 @@
         <td>{{property.city}}</td>
         <td>{{rent.date_on_rent}}</td>
         <td>{{rent.tenure}}</td>
-        <td><a href="#">Message</a></td>
+        <td><a href="{% url 'renter_message' rent.id %}">Message</a></td>
     </tr>
 </table>
 {% endblock%}

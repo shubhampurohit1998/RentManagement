@@ -1,29 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
-    <table border="1">
+<table border="1">
     <tr>
         <th>Message</th>
-        <th colspan="2">Request</th>
-        <th>User</th>
+        <th>Owner</th>
+        <th>Renter</th>
     </tr>
-    {% for item in leave_request %}
-        <tr>
-            <td>{{item.message}}</td>
-            {% if item.request_accept %}
-           <td>Accepted</td>
-            {% endif %}
-            {% if item.request_accept == False%}
-            <td>Cancelled</td>
-            {% else %}
-            <td>
-                <a href="{% url 'request_accept' item.id%}"><button>Accept</button></a>
-            </td>
-            <td>
-                <a href="{% url 'request_cancel' item.id%}"><button>Cancel</button></a>
-            </td>
-            {% endif %}
-         <td><a href="{% url 'renter_details' item.rent.property.id%}">Details</a></td>
-        </tr>
-    {% endfor %}
-    </table>
+{% for item in messages %}
+    <tr>
+        <td>{{item.message}}</td>
+        <td>{{item.user.first_name}}  {{item.user.last_name}}</td>
+        <td>{{item.rent.customer.first_name}}  {{item.rent.customer.last_name}}</td>
+    </tr>
+{% endfor %}
+
+</table>
+        <form method="post" action="">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Send">
+        </form>
 {% endblock %}

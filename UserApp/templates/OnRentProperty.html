@@ -21,9 +21,9 @@
         <td>{{item.property.city}}</td>
         <td>{{item.date_on_rent}}</td>
         <td>{{item.tenure}}</td>
-        <td><a href="{% url 'view_details' item.property.id%}">Owner details</a></td>
-        <td><a href="{% url 'leave_request' item.property.id%}">Leave request</a></td>
-        <td><a href="{% url '' item.property.id%}">Message</a></td>
+        <td><a href="{% url 'view_details' item.property.id %}">Owner details</a></td>
+        <td><a href="{% url 'leave_request' item.property.id %}">Leave request</a></td>
+        <td><a href="{% url 'renter_message' item.id%}">Message</a></td>
     </tr>
     {% endfor %}
 </table>

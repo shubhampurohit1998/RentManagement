@@ -60,11 +60,12 @@ class Picture(models.Model):
     pic_name = models.ImageField(upload_to='images/')
 
 
-class LeaveRequest(models.Model):
+class Message(models.Model):
     message = models.TextField(max_length=150, blank=True, null=True)
     rent = models.ForeignKey(Rent, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    request_accept = models.NullBooleanField()
 
     # def __str__(self):
     #     return self.rent.id
+class LeaveRequest(models.Model):
+    pass

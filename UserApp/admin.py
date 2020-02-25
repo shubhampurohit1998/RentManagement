@@ -5,5 +5,5 @@ admin.site.register(User)
 admin.site.register(Property)
 admin.site.register(Rent)
 admin.site.register(Picture)
-admin.site.register(LeaveRequest)
+admin.site.register(Message)
 

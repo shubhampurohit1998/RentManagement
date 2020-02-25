@@ -19,7 +19,10 @@ urlpatterns = [
     path('properties/', views.search_random_properties, name='random_properties'),
     path('add-profile-picture/<int:person_id>', views.add_profile_picture, name='add_profile_picture'),
     path('leave-request/<int:property_id>', views.leave_request, name='leave_request'),
-    path('owner-leave-panel/', views.leave_request_panel, name='owner_leave_panel'),
-    path('request-accept/<int:request_id>', views.leave_request_accept, name='request_accept'),
-    path('request-cancel/<int:request_id>', views.leave_request_cancel, name='request_cancel'),
+    # path('owner-leave-panel/', views.leave_request_panel, name='owner_leave_panel'),
+    # path('request-accept/<int:request_id>', views.leave_request_accept, name='request_accept'),
+    # path('request-cancel/<int:request_id>', views.leave_request_cancel, name='request_cancel'),
+    path('message-to-owner/<int:rent>', views.renter_message, name='renter_message'),
+    # path('message-to-renter/<int:rent>', views.renter_message, name='owner_message'),
+    # path('messages/', views.message_list, name='message_list')
 ]

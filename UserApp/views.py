@@ -200,39 +200,40 @@ def add_profile_picture(request, person_id):
 
 
 def leave_request(request, property_id):
+
+
+
+# def leave_request_panel(request):
+#     leave_obj = LeaveRequest.objects.filter(user_id=request.user.id)
+#     context = {'leave_request': leave_obj}
+#     return render(request, 'LeaveRequestPanel.html', context)
+#
+#
+# def leave_request_accept(request, request_id):
+#     leave_status = LeaveRequest.objects.get(id=request_id)
+#     leave_status.request_accept = True
+#     leave_status.save()
+#     return HttpResponseRedirect(reverse('owner_leave_panel'))
+#
+#
+# def leave_request_cancel(request, request_id):
+#     leave_status = LeaveRequest.objects.get(id=request_id)
+#     leave_status.request_accept = False
+#     leave_status.save()
+#     return HttpResponseRedirect(reverse('owner_leave_panel'))
+
+
+def renter_message(request, rent):
     if request.method == 'POST':
-        form = LeaveMessageForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('rental_assets'))
-    # import pdb;
-    # pdb.set_trace()
-    property_obj = Property.objects.get(id=property_id)
-    form = LeaveMessageForm(initial={'rent': property_obj.rent.id,
-                                     'user': property_obj.owner.id,
-                                     'property': property_obj.id})
-    return render(request, 'LeaveMessage.html', {'form': form, 'property_id': property_id})
+        form = MessageForm(request.POST)
+        form.save()
+        return HttpResponseRedirect(reverse('renter_message', rent))
+    rent_obj = Rent.objects.get(id=rent)
+    messages = Message.objects.filter(rent_id=rent)
+    form = MessageForm(initial={'rent': rent, 'user': rent_obj.property.owner})
+    return render(request, 'Message.html', {'form': form, 'messages': messages})
 
 
-def leave_request_panel(request):
-    leave_obj = LeaveRequest.objects.filter(user_id=request.user.id)
-    context = {'leave_request': leave_obj}
-    return render(request, 'LeaveRequestPanel.html', context)
-
-
-def leave_request_accept(request, request_id):
-    leave_status = LeaveRequest.objects.get(id=request_id)
-    leave_status.request_accept = True
-    leave_status.save()
-    return HttpResponseRedirect(reverse('owner_leave_panel'))
-
-
-def leave_request_cancel(request, request_id):
-    leave_status = LeaveRequest.objects.get(id=request_id)
-    leave_status.request_accept = False
-    leave_status.save()
-    return HttpResponseRedirect(reverse('owner_leave_panel'))
-
-
-def contact_list(request):
-    pass
+# def message_list(request):
+#     list = Message.objects.filter(user_id=request.user.id)
+#     return render(request, 'Message.html', {'list': list})
