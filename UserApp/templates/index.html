@@ -7,11 +7,13 @@
 <p>Welcome to dashboard</p>
 <ul>
 <li><a href="{% url 'profile' %}">Profile</a></li>
-<li><a href="{% url 'register_property' %}">Add your property now</a><br></li>
-<li><a href="{% url 'show_property' %}">Your assets</a><br></li>
 <li><a href="{% url 'random_properties'%}">Property on rent</a><br></li>
 <li><a href="{% url 'rental_assets' %}">Rental properties</a><br></li>
-<li><a href="#">Notifications</a><br></li>
+{% if user.is_owner %}
+<li><a href="{% url 'owner_leave_panel'%}">Notifications</a><br></li>
+<li><a href="{% url 'register_property' %}">Add your property now</a><br></li>
+<li><a href="{% url 'show_property' %}">Your assets</a><br></li>
+{% endif %}
 </ul>
 {% if flag and property_list %}
 <center>

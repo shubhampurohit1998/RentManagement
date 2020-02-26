@@ -1,14 +1,11 @@
 from django.db.models import Q
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
-from RentManagement import settings
-from .models import *
-from django.forms import formset_factory
 from django.http import HttpResponseRedirect
 from .forms import *
 from django.views import View
-from django.views.generic import ListView, DetailView
 from datetime import date
+from django.contrib.auth.decorators import login_required, permission_required
 
 
 def index(request):
@@ -19,7 +16,6 @@ def index(request):
     if query:
         flag = True
         form = SearchForm()
-
         property_list = Property.objects.filter(Q(city__icontains=query),
                                                 Q(is_active=True))
         context = {'property_list': property_list, 'form': form, 'flag': flag}
@@ -28,6 +24,7 @@ def index(request):
         return render(request, 'index.html', context)
 
 
+@login_required
 def add_property(request):
 
     if request.method == 'POST':
@@ -39,12 +36,14 @@ def add_property(request):
     return render(request, 'PropertyRegistration.html', {'form': form})
 
 
+@login_required
 def show_property_list(request):
     property_list = Property.objects.filter(owner_id=request.user.id)
     context = {'property_list': property_list}
     return render(request, 'ShowProperty.html', context)
 
 
+@login_required
 def add_property_images(request, property_id):
     if request.method == 'POST':
         # import pdb;
@@ -77,6 +76,8 @@ def add_property_images(request, property_id):
 #     return render(request, 'Add_Pictures.html', {'form': form, 'images': images})
 
 
+@login_required
+@permission_required('UserApp.can_delete_property')
 def delete_property(request, property_id):
     obj = get_object_or_404(Property, pk=property_id)
     # import pdb;
@@ -86,6 +87,7 @@ def delete_property(request, property_id):
     return HttpResponseRedirect(reverse('show_property'))
 
 
+@login_required
 def update_property_details(request, property_id):
 
     property_obj = get_object_or_404(Property, pk=property_id)
@@ -97,6 +99,7 @@ def update_property_details(request, property_id):
     return render(request, 'UpdatePropertyDetail.html', context)
 
 
+@login_required
 def property_detail(request, property_id):
     property_obj = get_object_or_404(Property, pk=property_id)
     user_obj = get_object_or_404(User, pk=property_obj.owner.id)
@@ -108,16 +111,16 @@ def property_detail(request, property_id):
 
 
 # Function based view
+@login_required
+def profile(request):
+    user_obj = get_object_or_404(User, pk=request.user.id)
+    # owned_properties = Property.objects.all(owner_id=person_obj.id).count()
+    context = {'user': user_obj}
+    return render(request, 'Profile.html', context)
 
-# def profile(request):
-#     user_obj = get_object_or_404(User, pk=request.user.id)
-#     person_obj = get_object_or_404(Person, user_id=request.user.id)
-#     # owned_properties = Property.objects.all(owner_id=person_obj.id).count()
-#     context = {'user': user_obj, 'person': person_obj}
-#     return render(request, 'Profile.html', context)
 
 # Class based view
-
+@login_required
 class ProfileView(View):
     template_name = 'Profile.html'
 
@@ -128,6 +131,7 @@ class ProfileView(View):
         return render(request, self.template_name, context)
 
 
+@login_required
 def update_user_profile(request):
     user = get_object_or_404(User, pk=request.user.id)
     user_form = UpdateProfileUserForm(request.POST or None, instance=user)
@@ -139,6 +143,7 @@ def update_user_profile(request):
     return render(request, 'UpdateProfile.html', context)
 
 
+@login_required
 def property_on_rent(request, property_id):
     if request.method == 'POST':
         form = RentForm(request.POST)
@@ -155,6 +160,7 @@ def property_on_rent(request, property_id):
     return render(request, 'AddOnRentPeriod.html', context)
 
 
+@login_required
 def rental_property_list(request):
     user = User.objects.get(id=request.user.id)
     rental_properties = Rent.objects.filter(customer_id=user.id)
@@ -162,12 +168,14 @@ def rental_property_list(request):
     return render(request, 'OnRentProperty.html', context)
 
 
+@login_required
 def delete_property_image(request, image_id):
     picture_obj = Picture.objects.get(id=image_id)
     picture_obj.delete()
     return HttpResponseRedirect(reverse('add_image', args=[picture_obj.property_id]))
 
 
+@login_required
 def renter_details(request, property_id):
     # import pdb;
     # pdb.set_trace()
@@ -188,6 +196,7 @@ def search_random_properties(request):
     return render(request, 'index.html', context)
 
 
+@login_required
 def add_profile_picture(request, person_id):
     # instance = get_object_or_404(Person, id=person_id)
     form = ProfilePictureForm(request.POST or None, instance=instance)
@@ -199,39 +208,62 @@ def add_profile_picture(request, person_id):
     return render(request, 'AddProfilePicture.html', {'form': form, 'person_id': person_id})
 
 
-def leave_request(request, property_id):
+@login_required
+def leave_request(request, rent):
+    if request.method == 'POST':
+        form = LeaveRequestForm(request.POST)
+        # import pdb;pdb.set_trace()
+        leave = LeaveRequest.objects.filter(Q(rent_id=rent), Q(request_accept__isnull=True))
+        if not leave:
+            form.save()
+        return HttpResponseRedirect(reverse('rental_assets'))
+    # property_obj = Property.objects.get(id=r)
+    rent_obj = Rent.objects.get(id=rent)
+    form = LeaveRequestForm(initial={'rent': rent, 'user': rent_obj.property.owner})
+    return render(request, 'LeaveMessage.html', {'form': form})
 
 
-
-# def leave_request_panel(request):
-#     leave_obj = LeaveRequest.objects.filter(user_id=request.user.id)
-#     context = {'leave_request': leave_obj}
-#     return render(request, 'LeaveRequestPanel.html', context)
-#
-#
-# def leave_request_accept(request, request_id):
-#     leave_status = LeaveRequest.objects.get(id=request_id)
-#     leave_status.request_accept = True
-#     leave_status.save()
-#     return HttpResponseRedirect(reverse('owner_leave_panel'))
-#
-#
-# def leave_request_cancel(request, request_id):
-#     leave_status = LeaveRequest.objects.get(id=request_id)
-#     leave_status.request_accept = False
-#     leave_status.save()
-#     return HttpResponseRedirect(reverse('owner_leave_panel'))
+@login_required
+def leave_request_panel(request):
+    leave_obj = LeaveRequest.objects.filter(user_id=request.user.id)
+    context = {'leave_request': leave_obj}
+    return render(request, 'LeaveRequestPanel.html', context)
 
 
+@login_required
+def leave_request_accept(request, request_id):
+    leave_status = LeaveRequest.objects.get(id=request_id)
+    leave_status.request_accept = True
+    leave_status.save()
+    return HttpResponseRedirect(reverse('owner_leave_panel'))
+
+
+@login_required
+def leave_request_cancel(request, request_id):
+    leave_status = LeaveRequest.objects.get(id=request_id)
+    leave_status.request_accept = False
+    leave_status.save()
+    return HttpResponseRedirect(reverse('owner_leave_panel'))
+
+
+@login_required
 def renter_message(request, rent):
     if request.method == 'POST':
         form = MessageForm(request.POST)
+        # import pdb;pdb.set_trace()
         form.save()
-        return HttpResponseRedirect(reverse('renter_message', rent))
+        return HttpResponseRedirect(reverse('renter_message', args=[form['rent'].data]))
     rent_obj = Rent.objects.get(id=rent)
     messages = Message.objects.filter(rent_id=rent)
     form = MessageForm(initial={'rent': rent, 'user': rent_obj.property.owner})
     return render(request, 'Message.html', {'form': form, 'messages': messages})
+
+
+@login_required
+def leave_status(request, rent):
+    # import pdb;pdb.set_trace()
+    leave = LeaveRequest.objects.filter(rent_id=rent)
+    return render(request, 'LeaveStatus.html', {'leave': leave})
 
 
 # def message_list(request):

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+    <table>
+        <tr>
+        <th>Status</th>
+        </tr>
+    {% for item in leave %}
+    <tr>
+        {% if item.request_accept %}
+        <td>Accepted</td>
+        {% elif item.request_accept == False %}
+        <td>Rejected</td>
+        {% else %}
+        <td>Pending</td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+   <tr><td><a href="{% url 'renter_message' leave.0.id %}"><button>Message</button></a></td></tr>
+    </table>
+{% endblock %}

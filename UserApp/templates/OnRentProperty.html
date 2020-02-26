@@ -10,6 +10,8 @@
     <th>City</th>
     <th colspan="2">Time Period</th>
     <th colspan="2">More</th>
+    <th>Leave status</th>
+    <th>Contact</th>
 <!--    <th>Owner Details</th>-->
     </tr>
     {% for item in rent %}
@@ -22,7 +24,8 @@
         <td>{{item.date_on_rent}}</td>
         <td>{{item.tenure}}</td>
         <td><a href="{% url 'view_details' item.property.id %}">Owner details</a></td>
-        <td><a href="{% url 'leave_request' item.property.id %}">Leave request</a></td>
+        <td><a href="{% url 'leave_request' item.id %}">Leave request</a></td>
+        <td><a href="{% url 'leave_status' item.id %}">Leave status</a></td>
         <td><a href="{% url 'renter_message' item.id%}">Message</a></td>
     </tr>
     {% endfor %}

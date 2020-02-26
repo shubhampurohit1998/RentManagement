@@ -15,6 +15,8 @@ class User(AbstractUser):
         ('O', 'Other')
     ]
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    is_owner = models.BooleanField(default=False, verbose_name="Owner")
+    is_customer = models.BooleanField(default=False, verbose_name='Customer')
 
     def __str__(self):
         return self.first_name
@@ -67,5 +69,9 @@ class Message(models.Model):
 
     # def __str__(self):
     #     return self.rent.id
+
+
 class LeaveRequest(models.Model):
-    pass
+    request_accept = models.NullBooleanField()
+    rent = models.ForeignKey(Rent, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
