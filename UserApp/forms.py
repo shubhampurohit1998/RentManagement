@@ -1,5 +1,7 @@
+import datetime
 from django import forms
 from django.contrib.auth.models import Group
+from django.core.exceptions import ValidationError
 from . models import *
 from django.forms import ModelForm, Textarea
 from allauth.account.forms import SignupForm
@@ -61,7 +63,6 @@ class PropertyRegisterForm(ModelForm):
 
     class Meta:
         model = Property
-        # fields = ['price', 'size', 'address', 'p_type', 'city']
         fields = '__all__'
         widgets = {'owner': forms.HiddenInput(),
                    'is_active': forms.HiddenInput(),
@@ -89,6 +90,8 @@ class InsertImageForm(ModelForm):
 
 
 class RentForm(ModelForm):
+    # date_on_rent = forms.DateField()
+    # period = forms.DateField
 
     class Meta:
         model = Rent
@@ -96,21 +99,22 @@ class RentForm(ModelForm):
         widgets = {'property': forms.HiddenInput(),
                    'customer': forms.HiddenInput(),
                    'request_accept': forms.HiddenInput(),
-                   'date_on_rent': forms.DateInput,
+                   'is_active': forms.HiddenInput(),
+                   'date_on_rent': forms.TextInput(attrs={'readonly': 'readonly'}),
                    'tenure': forms.DateInput,
                    }
+        readonly_fields = ('first',)
 
-    # def __init__(self, *args, **kwargs):
-    #     super(RentForm, self).__init__(*args, **kwargs)
-    #     self.fields['date_on_rent'].disabled = True
+    # def clean_tenure(self):
+    #     tenure = self.cleaned_data['tenure']
+    #     if tenure is None or tenure < datetime.date.today():
+    #         raise ValidationError("Tenure date is not valid")
+    #     return tenure
 
 
 class SearchForm(forms.Form):
     query = forms.CharField(max_length=50, label='',   widget=forms.TextInput
                             (attrs={'placeholder': 'search here', }), required=False)
-    # widgets = {
-    #     'query': forms.Form
-    # }
 
 
 class UpdateProfileUserForm(ModelForm):
@@ -119,23 +123,6 @@ class UpdateProfileUserForm(ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'mobile', 'gender', 'profile_picture', ]
 
-
-# class DemoPersonForm(ModelForm):
-#
-#     class Meta:
-#         model = Person
-#         fields = '__all__'
-#
-#     widgets = {
-#         'user': forms.HiddenInput()
-#     }
-#
-#
-# class DemoUserForm(ModelForm):
-#
-#     class Meta:
-#         model = User
-#         fields = ['first_name', 'last_name']
 
 class ProfilePictureForm(ModelForm):
     class Meta:
@@ -152,6 +139,7 @@ class MessageForm(ModelForm):
         widgets = {
             'rent': forms.HiddenInput(),
             'user': forms.HiddenInput(),
+            'receiver': forms.HiddenInput(),
         }
 
 

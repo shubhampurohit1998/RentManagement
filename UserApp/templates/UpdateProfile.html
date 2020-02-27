@@ -1,12 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'my_base.html' %}
 {% block content %}
-<ul>
-    <li><a href="{% url 'home' %}">Home</a></li>
-</ul>
+<center>
     <form method="post" action="">
         {% csrf_token %}
         {{user.as_p}}
-        {{person.as_p}}
     <input type="submit" value="Update">
     </form>
+</center>
 {% endblock %}

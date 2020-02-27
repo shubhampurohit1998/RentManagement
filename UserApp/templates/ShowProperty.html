@@ -1,5 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'my_base.html' %}
 {% block content %}
+<center>
 <table border="1" style="color:Black">
         <tr style="color:Blue">
         <th>Price</th>
@@ -19,15 +20,16 @@
             <td>{{property.size}}</td>
             <td>{{property.city}}</td>
             <td>{{property.description}}</td>
-            {% if property.is_active%}
-            <td>None</td>
+            {% if not property.is_active %}
+            <td><a href="{% url 'renter_details' property.id %}"><button>On rent</button></a></td>
             {% else %}
-            <td><a href="{% url 'renter_details' property.id %}">On rent</a></td>
+            <td>None</td>
             {% endif %}
-            <td><a href="{% url 'add_image' property.id %}">Add image</a></td>
-            <td><a href="{% url 'update_property' property.id %}">Update</a></td>
-            <td><a href="{% url 'delete_property' property.id %}">Delete</a></td>
+            <td><a href="{% url 'add_image' property.id %}"><button>Add image</button></a></td>
+            <td><a href="{% url 'update_property' property.id %}"><button>Update</button></a></td>
+            <td><a href="{% url 'delete_property' property.id %}"><button>Delete</button></a></td>
           </tr>
     {% endfor %}
 </table>
+</center>
 {% endblock %}

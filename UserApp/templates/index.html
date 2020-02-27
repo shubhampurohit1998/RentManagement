@@ -1,10 +1,5 @@
-{% extends 'base.html' %}
+{% extends 'my_base.html' %}
 {% block content %}
-<form method="GET" action="{% url 'home' %}">
-    {{form.as_p}}
-    <input type="submit" value="Search">
-</form>
-<p>Welcome to dashboard</p>
 <ul>
 <li><a href="{% url 'profile' %}">Profile</a></li>
 <li><a href="{% url 'random_properties'%}">Property on rent</a><br></li>

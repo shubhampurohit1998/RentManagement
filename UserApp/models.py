@@ -48,10 +48,11 @@ class Property(models.Model):
 
 
 class Rent(models.Model):
-    property = models.OneToOneField(Property, on_delete=models.CASCADE)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE)
     customer = models.ForeignKey(User, models.SET_NULL, blank=True, null=True)
     date_on_rent = models.DateField(null=False,)
     tenure = models.DateField(blank=True, null=True,)
+    is_active = models.BooleanField(default=False)
 
     def __str__(self):
         return unicode(self.property)
@@ -65,7 +66,8 @@ class Picture(models.Model):
 class Message(models.Model):
     message = models.TextField(max_length=150, blank=True, null=True)
     rent = models.ForeignKey(Rent, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver')
 
     # def __str__(self):
     #     return self.rent.id

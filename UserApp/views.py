@@ -120,15 +120,15 @@ def profile(request):
 
 
 # Class based view
-@login_required
-class ProfileView(View):
-    template_name = 'Profile.html'
-
-    def get(self, request):
-        user_obj = get_object_or_404(User, pk=request.user.id)
-        # owned_properties = Property.objects.all(owner_id=person_obj.id).count()
-        context = {'user': user_obj}
-        return render(request, self.template_name, context)
+# @login_required
+# class ProfileView(View):
+#     template_name = 'Profile.html'
+#
+#     def get(self, request):
+#         user_obj = get_object_or_404(User, pk=request.user.id)
+#         # owned_properties = Property.objects.all(owner_id=person_obj.id).count()
+#         context = {'user': user_obj}
+#         return render(request, self.template_name, context)
 
 
 @login_required
@@ -147,23 +147,23 @@ def update_user_profile(request):
 def property_on_rent(request, property_id):
     if request.method == 'POST':
         form = RentForm(request.POST)
-        # import pdb;
-        # pdb.set_trace()
         if form.is_valid():
-            form = RentForm(request.POST)
             Property.objects.filter(id=property_id).update(is_active=False)
             form.save()
             return HttpResponseRedirect(reverse('rental_assets'))
+        else:
+            context = {'form_errors': form.errors}
+            return render(request, 'AddOnRentPeriod.html', context)
     form = RentForm(initial={'property': property_id, 'customer': request.user.id,
-                             'date_on_rent': date.today})
+                             'date_on_rent': date.today, 'is_active': True})
     context = {'form': form}
     return render(request, 'AddOnRentPeriod.html', context)
 
 
 @login_required
 def rental_property_list(request):
-    user = User.objects.get(id=request.user.id)
-    rental_properties = Rent.objects.filter(customer_id=user.id)
+    # user = User.objects.get(id=request.user.id)
+    rental_properties = Rent.objects.filter(customer_id=request.user.id)
     context = {'rent': rental_properties}
     return render(request, 'OnRentProperty.html', context)
 
@@ -180,7 +180,7 @@ def renter_details(request, property_id):
     # import pdb;
     # pdb.set_trace()
     property_obj = Property.objects.get(id=property_id)
-    rent_obj = Rent.objects.get(property_id=property_id)
+    rent_obj = Rent.objects.get(property_id=property_id, is_active=True)
     user_obj = get_object_or_404(User, id=rent_obj.customer.id)
     context = {'user': user_obj, 'rent': rent_obj, 'property': property_obj}
     return render(request, 'RenterDetails.html', context)
@@ -233,8 +233,14 @@ def leave_request_panel(request):
 @login_required
 def leave_request_accept(request, request_id):
     leave_status = LeaveRequest.objects.get(id=request_id)
+    property_obj = Property.objects.get(pk=leave_status.rent.property.id)
+    rent_obj = Rent.objects.get(pk=leave_status.rent.id)
     leave_status.request_accept = True
     leave_status.save()
+    property_obj.is_active = True
+    property_obj.save()
+    rent_obj.is_active = False
+    rent_obj.save()
     return HttpResponseRedirect(reverse('owner_leave_panel'))
 
 
@@ -255,7 +261,11 @@ def renter_message(request, rent):
         return HttpResponseRedirect(reverse('renter_message', args=[form['rent'].data]))
     rent_obj = Rent.objects.get(id=rent)
     messages = Message.objects.filter(rent_id=rent)
-    form = MessageForm(initial={'rent': rent, 'user': rent_obj.property.owner})
+    if request.user.id is rent_obj.customer.id:
+        receiver = rent_obj.property.owner
+    else:
+        receiver = rent_obj.customer
+    form = MessageForm(initial={'rent': rent, 'user': request.user.id, 'receiver': receiver})
     return render(request, 'Message.html', {'form': form, 'messages': messages})
 
 

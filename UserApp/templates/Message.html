@@ -1,16 +1,16 @@
-{% extends 'base.html' %}
+{% extends 'my_base.html' %}
 {% block content %}
 <table border="1">
     <tr>
         <th>Message</th>
-        <th>Owner</th>
-        <th>Renter</th>
+        <th>Sender</th>
+        <th>Receiver</th>
     </tr>
 {% for item in messages %}
     <tr>
         <td>{{item.message}}</td>
         <td>{{item.user.first_name}}  {{item.user.last_name}}</td>
-        <td>{{item.rent.customer.first_name}}  {{item.rent.customer.last_name}}</td>
+        <td>{{item.receiver.first_name}}  {{item.receiver.last_name}}</td>
     </tr>
 {% endfor %}
 
