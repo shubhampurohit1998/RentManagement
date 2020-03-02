@@ -1,11 +1,10 @@
 {% extends 'my_base.html' %}
 {% block content %}
-    {% for error in form_errors %}
-        {{error}}
-    {% endfor %}
+    <center>
     <form method="post" action="">
         {% csrf_token %}
         {{form.as_p}}
         <input type="submit" value="Submit">
     </form>
+    </center>
 {% endblock %}

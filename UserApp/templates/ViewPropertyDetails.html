@@ -1,8 +1,9 @@
 {% extends 'my_base.html' %}
 {% load static %}
 {% block content %}
+<center>
     {% if owner.profile_picture%}
-    <img src="{{user.profile_picture.url}}" alt="">
+    <img src="{{user.profile_picture.url}}" alt="Avatar" style="border-radius:50%">
     {% endif%}<br>
     <label>Owner  :</label>{{user.first_name}} {{user.last_name}}<br>
     <label>Contact Number  :</label>{{user.mobile}}<br>
@@ -17,6 +18,8 @@
         <img src="{{image.pic_name.url}}" alt="" height="225" width="225">
     {% endfor %}
     {% if property.is_active %}
-    <a href="{% url 'time_period' property.id %}"> Buy/Rent this property</a>
+    <a href="{% url 'time_period' property.id %}" style="color:blue"><button style="color:green">Rent</button></a>
+    <a href="#"><button style="color:green">Buy</button></a>
     {% endif %}
+</center>
 {% endblock %}

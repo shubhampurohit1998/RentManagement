@@ -8,6 +8,7 @@
 <li><a href="{% url 'owner_leave_panel'%}">Notifications</a><br></li>
 <li><a href="{% url 'register_property' %}">Add your property now</a><br></li>
 <li><a href="{% url 'show_property' %}">Your assets</a><br></li>
+<li><a href="{% url 'history' %}">History</a><br></li>
 {% endif %}
 </ul>
 {% if flag and property_list %}
@@ -30,7 +31,7 @@
         <td>{{item.size}}</td>
         <td>{{item.p_type}}</td>
         <td>{{item.description}}</td>
-        <td><a href="{% url 'view_details' item.id %}">View details</a></td>
+        <td><a href="{% url 'view_details' item.id %}"><button style="color:blue">View details</button></a></td>
     </tr>
 {% endfor %}
 </table>

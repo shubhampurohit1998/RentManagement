@@ -1,7 +1,9 @@
 {% extends 'my_base.html' %}
 {% block content %}
 {{message}}
+<center>
 <table border="1">
+    {% if rent %}
     <tr>
     <th>Price</th>
     <th>Address</th>
@@ -15,6 +17,7 @@
     <th>Contact</th>
     <th>Status</th>
     </tr>
+    {% endif %}
     {% for item in rent %}
     <tr>
         <td>{{item.property.price}}</td>
@@ -38,6 +41,9 @@
         <td>You are no longer paying guest of this asset.</td>
         {% endif %}
     </tr>
+    {% empty %}
+    <p style="color:red">You have no rental property now....</p>
     {% endfor %}
 </table>
+</center>
 {% endblock %}

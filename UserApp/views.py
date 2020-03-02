@@ -12,26 +12,28 @@ def index(request):
     form = SearchForm()
     query = request.GET.get('query')
     flag = False
-    context = {'form': form, 'flag': flag}
+    context = {'search_form': form, 'flag': flag}
     if query:
         flag = True
         form = SearchForm()
         property_list = Property.objects.filter(Q(city__icontains=query),
                                                 Q(is_active=True))
-        context = {'property_list': property_list, 'form': form, 'flag': flag}
+        context = {'property_list': property_list, 'search_form': form, 'flag': flag}
         return render(request, 'index.html', context)
     else:
         return render(request, 'index.html', context)
 
 
 @login_required
+@permission_required('UserApp.add_property')
 def add_property(request):
-
     if request.method == 'POST':
         form = PropertyRegisterForm(request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('home'))
+        else:
+            return render(request, 'PropertyRegistration.html', {'form': form})
     form = PropertyRegisterForm(initial={'owner': request.user.id, 'is_active':  True})
     return render(request, 'PropertyRegistration.html', {'form': form})
 
@@ -44,6 +46,7 @@ def show_property_list(request):
 
 
 @login_required
+@permission_required('UserApp.add_picture', raise_exception=True)
 def add_property_images(request, property_id):
     if request.method == 'POST':
         # import pdb;
@@ -77,17 +80,18 @@ def add_property_images(request, property_id):
 
 
 @login_required
-@permission_required('UserApp.can_delete_property')
+@permission_required('UserApp.delete property', raise_exception=True)
 def delete_property(request, property_id):
-    obj = get_object_or_404(Property, pk=property_id)
     # import pdb;
     # pdb.set_trace()
+    obj = Property.objects.get(id=property_id)
     if obj.is_active:
         obj.delete()
     return HttpResponseRedirect(reverse('show_property'))
 
 
 @login_required
+@permission_required('UserApp.change property', raise_exception=True)
 def update_property_details(request, property_id):
 
     property_obj = get_object_or_404(Property, pk=property_id)
@@ -144,6 +148,7 @@ def update_user_profile(request):
 
 
 @login_required
+@permission_required('UserApp.add_rent', raise_exception=True)
 def property_on_rent(request, property_id):
     if request.method == 'POST':
         form = RentForm(request.POST)
@@ -152,8 +157,7 @@ def property_on_rent(request, property_id):
             form.save()
             return HttpResponseRedirect(reverse('rental_assets'))
         else:
-            context = {'form_errors': form.errors}
-            return render(request, 'AddOnRentPeriod.html', context)
+            return render(request, 'AddOnRentPeriod.html', {'form': form})
     form = RentForm(initial={'property': property_id, 'customer': request.user.id,
                              'date_on_rent': date.today, 'is_active': True})
     context = {'form': form}
@@ -256,9 +260,12 @@ def leave_request_cancel(request, request_id):
 def renter_message(request, rent):
     if request.method == 'POST':
         form = MessageForm(request.POST)
-        # import pdb;pdb.set_trace()
-        form.save()
-        return HttpResponseRedirect(reverse('renter_message', args=[form['rent'].data]))
+        if form.is_valid():
+            # import pdb;pdb.set_trace()
+            form.save()
+            return HttpResponseRedirect(reverse('renter_message', args=[form['rent'].data]))
+        else:
+            return render(request, 'Message.html', {'form': form})
     rent_obj = Rent.objects.get(id=rent)
     messages = Message.objects.filter(rent_id=rent)
     if request.user.id is rent_obj.customer.id:
@@ -276,6 +283,9 @@ def leave_status(request, rent):
     return render(request, 'LeaveStatus.html', {'leave': leave})
 
 
-# def message_list(request):
-#     list = Message.objects.filter(user_id=request.user.id)
-#     return render(request, 'Message.html', {'list': list})
+@login_required
+# @permission_required()
+def rent_history(request):
+
+    rent_obj = Rent.objects.filter(property__owner_id=request.user.id, is_active__exact=False)
+    return render(request, 'RentHistory.html', {'rent_obj': rent_obj})

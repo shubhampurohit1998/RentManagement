@@ -1,0 +1,27 @@
+{% extends 'my_base.html' %}
+{% block content %}
+<center>
+    {% if rent_obj %}
+    <table border="1">
+    <tr>
+        <th>Price</th>
+        <th>Property</th>
+        <th>Renter</th>
+        <th>Date on rent</th>
+        <th>Tenure</th>
+    </tr>
+    {% for item in rent_obj %}
+    <tr>
+        <td>{{item.property.price}}</td>
+        <td><a href="{% url 'view_details' item.property.id %}">{{item.property}}</a></td>
+        <td><{{item.customer}}</td>
+        <td>{{item.date_on_rent}}</td>
+        <td>{{item.tenure}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+    <p>No history</p>
+{% endif %}
+</center>
+{% endblock %}

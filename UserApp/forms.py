@@ -7,6 +7,10 @@ from django.forms import ModelForm, Textarea
 from allauth.account.forms import SignupForm
 
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
 class RegisterForm(SignupForm):
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)
@@ -31,15 +35,15 @@ class RegisterForm(SignupForm):
 
     def clean_first_name(self):
         first_name = self.cleaned_data['first_name']
-        if not str.isalpha(first_name):
+        if not first_name.isalpha():
             raise forms.ValidationError('Name can not contains digits')
-        return self.cleaned_data[first_name]
+        return first_name
 
     def clean_last_name(self):
         last_name = self.cleaned_data['last_name']
-        if not str.isalpha(last_name):
+        if not last_name.isalpha():
             raise forms.ValidationError('Surname can not contains digits')
-        return self.cleaned_data[last_name]
+        return last_name
 
     def save(self, request):
         user = super(RegisterForm, self).save(request)
@@ -77,6 +81,12 @@ class PropertyRegisterForm(ModelForm):
             'Property type': 'Select which kind of property you wanna add here.....',
         }
 
+        def clean_size(self):
+            size = self.cleaned_data['size']
+            if len(size) < 4:
+                raise forms.ValidationError('Size should 4 characters long')
+            return size
+
 
 class InsertImageForm(ModelForm):
 
@@ -101,15 +111,14 @@ class RentForm(ModelForm):
                    'request_accept': forms.HiddenInput(),
                    'is_active': forms.HiddenInput(),
                    'date_on_rent': forms.TextInput(attrs={'readonly': 'readonly'}),
-                   'tenure': forms.DateInput,
+                   'tenure': DateInput(),
                    }
-        readonly_fields = ('first',)
 
-    # def clean_tenure(self):
-    #     tenure = self.cleaned_data['tenure']
-    #     if tenure is None or tenure < datetime.date.today():
-    #         raise ValidationError("Tenure date is not valid")
-    #     return tenure
+    def clean_tenure(self):
+        tenure = self.cleaned_data['tenure']
+        if tenure is None or tenure <= datetime.date.today():
+            raise ValidationError("Tenure date is not valid")
+        return tenure
 
 
 class SearchForm(forms.Form):
@@ -122,6 +131,24 @@ class UpdateProfileUserForm(ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'mobile', 'gender', 'profile_picture', ]
+
+        def clean_mobile(self):
+            mobile = self.cleaned_data['mobile']
+            if not str.isdigit(mobile):
+                raise forms.ValidationError('Mobile number can not be in characters')
+            return self.cleaned_data['mobile']
+
+        def clean_first_name(self):
+            first_name = self.cleaned_data['first_name']
+            if not first_name.isalpha():
+                raise forms.ValidationError('Name can not contains digits')
+            return first_name
+
+        def clean_last_name(self):
+            last_name = self.cleaned_data['last_name']
+            if not last_name.isalpha():
+                raise forms.ValidationError('Surname can not contains digits')
+            return last_name
 
 
 class ProfilePictureForm(ModelForm):
@@ -137,10 +164,19 @@ class MessageForm(ModelForm):
         model = Message
         fields = '__all__'
         widgets = {
+            'message': forms.Textarea(attrs={'cols': 35, 'rows': 2}),
             'rent': forms.HiddenInput(),
             'user': forms.HiddenInput(),
             'receiver': forms.HiddenInput(),
         }
+
+        def clean_message(self):
+            # import pdb;
+            # pdb.set_trace()
+            message = self.cleaned_data['message']
+            if message is None:
+                raise ValidationError('Empty message')
+            return message
 
 
 class LeaveRequestForm(ModelForm):

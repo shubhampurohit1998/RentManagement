@@ -1,8 +1,11 @@
 {% extends 'my_base.html' %}
 {% block content %}
-{% if person.profile_picture %}
-  <img src="{{user.profile_picture.url}}"><br>
+{% if user.profile_picture %}
+    <center>
+  <img src="{{user.profile_picture.url}}"><br><br>
+    </center>
 {% endif %}
+<center>
 <table border="1">
 <tr>
     <th>Name</th>
@@ -27,4 +30,5 @@
         <td><a href="{% url 'renter_message' rent.id %}">Message</a></td>
     </tr>
 </table>
+</center>
 {% endblock%}

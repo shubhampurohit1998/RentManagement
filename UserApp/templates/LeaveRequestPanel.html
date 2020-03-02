@@ -1,5 +1,7 @@
 {% extends 'my_base.html' %}
 {% block content %}
+    <center>
+        {% if leave_request %}
     <table border="1">
     <tr>
         <th colspan="2">Request</th>
@@ -23,4 +25,8 @@
         </tr>
     {% endfor %}
     </table>
+        {% else %}
+        <p>No notifications yet.</p>
+        {% endif %}
+    </center>
 {% endblock %}

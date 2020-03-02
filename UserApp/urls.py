@@ -25,6 +25,7 @@ urlpatterns = [
     path('request-cancel/<int:request_id>', views.leave_request_cancel, name='request_cancel'),
     path('message-to-owner/<int:rent>', views.renter_message, name='renter_message'),
     path('leave-status/<int:rent>', views.leave_status, name='leave_status'),
+    path('history/', views.rent_history, name='history')
     # path('message-to-renter/<int:rent>', views.renter_message, name='owner_message'),
     # path('messages/', views.message_list, name='message_list')
 ]

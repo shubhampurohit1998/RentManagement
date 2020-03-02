@@ -64,7 +64,7 @@ class Picture(models.Model):
 
 
 class Message(models.Model):
-    message = models.TextField(max_length=150, blank=True, null=True)
+    message = models.TextField(max_length=150, blank=False, null=False)
     rent = models.ForeignKey(Rent, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver')

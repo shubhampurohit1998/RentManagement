@@ -2,6 +2,7 @@
 {% block content %}
 <center>
 <table border="1" style="color:Black">
+    {% if property_list %}
         <tr style="color:Blue">
         <th>Price</th>
         <th>Address</th>
@@ -12,6 +13,7 @@
         <th>Status</th>
         <th colspan="3">Actions</th>
         </tr>
+    {% endif %}
     {% for property in property_list %}
         <tr>
             <td>{{property.price}}</td>
@@ -29,6 +31,8 @@
             <td><a href="{% url 'update_property' property.id %}"><button>Update</button></a></td>
             <td><a href="{% url 'delete_property' property.id %}"><button>Delete</button></a></td>
           </tr>
+    {% empty %}
+    <p>You have no property now....</p>
     {% endfor %}
 </table>
 </center>
